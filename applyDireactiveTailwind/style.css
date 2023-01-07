@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+/* write css code if your written css do not overwrite tailwind css */
+.button{
+    @apply m-4 text-white  hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:focus:ring-yellow-900;
+}
+.example{
+    @apply bg-gray-500;
+    color: white;
+}
+@tailwind utilities;
+/* write css code if your written css overwrite tailwind css */
