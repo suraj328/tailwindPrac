@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn-low-blue{
+    @apply bg-[#2494db] rounded pt-1 pb-1  pl-2 pr-2 text-white hover:bg-blue-200 hover:text-blue-500 cursor-pointer ;
+}
+.btn-mid-blue{
+    @apply bg-[#2646a0ed] rounded pt-1 pb-1  pl-2 pr-2 text-white  hover:bg-blue-200 hover:text-blue-500 cursor-pointer;
+}
+.text-hover-low-blue{
+    @apply hover:text-white;
+}
