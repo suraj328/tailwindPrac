@@ -217,7 +217,7 @@
 
     <!-- sign up code -->
 
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-full">
+    <div id="showSignUpModal" class="absolute z-20 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-full hidden">
         <!-- Modal content -->
         <div class=" bg-[#ffffffb8] rounded-lg shadow dark:bg-gray-700">
             <button id="closeSignUpModal" type="button"
@@ -290,6 +290,7 @@
                     </div>
                     <div id="signUpImageBox" class="hidden">
 
+                        <div id="signUpFileName" class="dark:text-white w-2/3"></div>
                         <div class="flex items-center justify-center w-full">
                             <label for="signUpImage"
                                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
