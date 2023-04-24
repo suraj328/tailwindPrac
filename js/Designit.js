@@ -3,6 +3,14 @@ const emailRegx =
 const spaceRegx = /\s/;
 const addressRegx = /[-,]/;
 const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/;
+
+//file extenson function
+var getExtension = (file) => {
+  const ext = file.split(".").pop();
+
+  return ext;
+};
+
 //navbar
 const navMenu = document.getElementById("nav-list-btn");
 const navList = document.getElementById("nav-list");
@@ -37,12 +45,14 @@ var signupSlideQueue = -1;
 
 const signUpNext = document.getElementById("signUpNext");
 const signUpPrev = document.getElementById("signUpPrev");
+const signUpSubmitBtn = document.getElementById("signUpSubmit");
 const signUpEmail = document.getElementById("signUpEmail");
 const signUpFullName = document.getElementById("signUpFullName");
 const signUpNumber = document.getElementById("signUpNumber");
 const signUpAddress = document.getElementById("signUpAddress");
 const signUpPassword = document.getElementById("signUpPassword");
 const signUpRePassword = document.getElementById("signUpRePassword");
+const signUpImage = document.getElementById("signUpImage");
 // error
 const signUpError = document.getElementById("signUpError");
 
@@ -52,13 +62,9 @@ const signUpFullNameBox = document.getElementById("signUpFullNameBox");
 const signUpNumberBox = document.getElementById("signUpNumberBox");
 const signUpAddressBox = document.getElementById("signUpAddressBox");
 const signUpPasswordBox = document.getElementById("signUpPasswordBox");
+const signUpImageBox = document.getElementById("signUpImageBox");
+const signUpDataBox = document.getElementById("signUpDataBox");
 
-//key listener for input element
-// if (signUpEmail.value.trim() != "" && emailRegx.test(signUpEmail.value)) {
-//   signUpEmailBool = true;
-// } else {
-//   signUpEmailBool = false;
-// }
 signUpEmail.addEventListener("keypress", (e) => {
   if (e.target.value.trim() != "" && emailRegx.test(e.target.value)) {
     // signUpEmailBool = true;
@@ -145,10 +151,9 @@ signUpAddress.addEventListener("keypress", (e) => {
   }
 });
 var pwd = 0;
-
+var rePwd = 0;
 
 signUpPassword.addEventListener("keypress", (e) => {
-  
   if (e.target.value.trim() == "") {
     signUpError.innerHTML = "";
     signUpError.innerHTML = `<span>Empty not allowed</span>`;
@@ -158,7 +163,7 @@ signUpPassword.addEventListener("keypress", (e) => {
     signUpError.innerHTML = "";
     signUpError.innerHTML = `<span>Most Conatain 8 character</span>`;
     pwd = 0;
-  signUpRePassword.classList.add("hidden");
+    signUpRePassword.classList.add("hidden");
   } else if (!pwdRegex.test(e.target.value)) {
     signUpError.innerHTML = "";
     signUpError.innerHTML = `<span>most conatain <br/> small capital sybmol number</span>`;
@@ -170,38 +175,68 @@ signUpPassword.addEventListener("keypress", (e) => {
 });
 
 signUpRePassword.addEventListener("keypress", (e) => {
-  
   if (e.target.value.trim() == "") {
     signUpError.innerHTML = "";
     signUpError.innerHTML = `<span>Empty not allowed</span>`;
-    
   } else if (e.target.value.trim().length < 8) {
     signUpError.innerHTML = "";
     signUpError.innerHTML = `<span>Most Conatain 8 character</span>`;
-   
   } else if (!pwdRegex.test(e.target.value)) {
     signUpError.innerHTML = "";
     signUpError.innerHTML = `<span class ="text-sm">most conatain <br/> small capital sybmol number</span>`;
-  }else if((signUpRePassword.value.trim()) != (signUpPassword.value.trim()) ){
+  } else if (
+    (signUpRePassword.value + e.key).trim() != signUpPassword.value.trim()
+  ) {
     signUpError.innerHTML = "";
     signUpError.innerHTML = `<span>Different Password</span>`;
   } else {
     signUpError.innerHTML = "";
-    
-    if(pwd == 1){
+
+    if (pwd == 1) {
       signupSlideQueue = 4;
     }
   }
 });
 
-//function for hidding and showing slides
+signUpImage.addEventListener("change", () => {
+  const file = signUpImage.files[0];
+  const ext = getExtension(file.name);
+  const validExt = ["jpg", "jpeg", "png"];
+  const checkExt = validExt.includes(ext);
 
+  if (file.name == "") {
+    signUpError.innerHTML = "";
+    signUpError.innerHTML = `<span>Upload Image</span>`;
+  } else if (!checkExt) {
+    signUpError.innerHTML = "";
+    signUpError.innerHTML = "<span>" + ext + " is not valid extenson</span>";
+  } else if (file.size / 1000 > 600) {
+    signUpError.innerHTML = "";
+    signUpError.innerHTML =
+      "<span>required size < 600 kb <br/>Uploaded file size is " +
+      file.size / 1000 +
+      " kb </span>";
+  } else {
+    signUpError.innerHTML = "";
+    signupSlideQueue = 5;
+  }
+});
+
+//function for hidding and showing slides
+//btn hide show code start
+const signUpNextBtnShow = () => {
+  signUpNext.classList.remove("hidden");
+};
+const signUpNextBtnHide = () => {
+  signUpNext.classList.add("hidden");
+};
 const signUpPrevBtnShow = () => {
   signUpPrev.classList.remove("hidden");
 };
 const signUpPrevBtnHide = () => {
   signUpPrev.classList.add("hidden");
 };
+//btn hide show code end
 
 const emailNextSlide = () => {
   signUpFullNameBox.classList.remove("hidden");
@@ -226,25 +261,40 @@ const signUpAddressNextSlide = () => {
   signUpPasswordBox.classList.remove("hidden");
   signUpPrevBtnShow();
 };
+const signUpPasswordNextSlide = () => {
+  signUpPasswordBox.classList.add("hidden");
+  signUpImageBox.classList.remove("hidden");
+  signUpPrevBtnShow();
+};
+const signUpImageNextSlide = () => {
+  signUpNextBtnHide();
+  signUpImageBox.classList.add("hidden");
+  signUpDataBox.classList.remove("hidden");
+  signUpSubmitBtn.classList.remove("hidden");
+  signUpPrevBtnShow();
+};
 
-// signup next btn event listener
+const signUpData = () => {
+  var signUpData = `
+    <ul class="text-black p-2 m-4 dark:bg-white  dark:text-white">
+      <li>Verify Your Data</li>
+      <li>email: ${signUpEmail.value}</li>
+      <li>Name : ${signUpFullName.value} </li>
+      <li>Number : ${signUpNumber.value}</li>
+      <li>Address : ${signUpAddress.value}</li>
+      <li>logo : ${signUpImage.files[0].name }</li>
+    </ul>
+  `
+  signUpDataBox.innerHTML = signUpData;
+  
+};
+// ---------------signup next btn event listener----------------
 signUpNext.addEventListener("click", () => {
-  // signupSlideQueue = '';
+
 
   console.log("next click");
 
-  // if (signUpEmailBool) {
-  //   signupSlideQueue = 0;
-  //   emailNextSlide();
-  // }
-  // if (signUpFullNameBool) {
-  //   signupSlideQueue = 1;
-  //   emailFullNameNextSlide();
-  // }
-  // if (signUpNumberBool) {
-  //   signupSlideQueue = 2;
-  //   signUpNumberNextSlide();
-  // }
+
 
   if (signupSlideQueue == 0) {
     signupSlideQueue = 0;
@@ -264,6 +314,15 @@ signUpNext.addEventListener("click", () => {
   if (signupSlideQueue == 3) {
     signupSlideQueue = 3;
     signUpAddressNextSlide();
+  }
+  if (signupSlideQueue == 4) {
+    signupSlideQueue = 4;
+    signUpPasswordNextSlide();
+  }
+  if (signupSlideQueue == 5) {
+    signupSlideQueue = 5;
+    signUpData();
+    signUpImageNextSlide();
   }
 });
 
@@ -288,6 +347,18 @@ const passwordPrevSlide = () => {
   signUpAddressBox.classList.remove("hidden");
   signUpPrevBtnShow();
 };
+const imagePrevSlide = () => {
+  signUpImageBox.classList.add("hidden");
+  signUpPasswordBox.classList.remove("hidden");
+  signUpPrevBtnShow();
+};
+const submitPrevSlide = () => {
+  signUpDataBox.classList.add("hidden");
+  signUpSubmitBtn.classList.add("hidden");
+  signUpImageBox.classList.remove("hidden");
+  signUpNextBtnShow();
+  signUpPrevBtnShow();
+};
 signUpPrev.addEventListener("click", () => {
   console.log(signupSlideQueue);
   switch (signupSlideQueue) {
@@ -310,6 +381,14 @@ signUpPrev.addEventListener("click", () => {
     case 3:
       signupSlideQueue -= 1;
       passwordPrevSlide();
+      break;
+    case 4:
+      signupSlideQueue -= 1;
+      imagePrevSlide();
+      break;
+    case 5:
+      signupSlideQueue -= 1;
+      submitPrevSlide();
       break;
     default:
       break;
