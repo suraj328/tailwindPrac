@@ -41,16 +41,16 @@ closeLoginModal.addEventListener("click", () => {
 
 // for signup open and close modal
 const showSignUpModal = document.getElementById("showSignUpModal");
-const closeSignUpModal =  document.getElementById("closeSignUpModal");
+const closeSignUpModal = document.getElementById("closeSignUpModal");
 const signUpBtn = document.getElementById("signUpBtn");
 
-signUpBtn.addEventListener('click',()=>{
+signUpBtn.addEventListener("click", () => {
   showSignUpModal.classList.toggle("hidden");
-  setTimeout(()=>{
+  setTimeout(() => {
     navList.classList.toggle("hidden");
-  },0);
+  }, 0);
 });
-closeSignUpModal.addEventListener('click',()=>{
+closeSignUpModal.addEventListener("click", () => {
   showSignUpModal.classList.toggle("hidden");
 });
 
@@ -81,6 +81,7 @@ const signUpAddressBox = document.getElementById("signUpAddressBox");
 const signUpPasswordBox = document.getElementById("signUpPasswordBox");
 const signUpImageBox = document.getElementById("signUpImageBox");
 const signUpDataBox = document.getElementById("signUpDataBox");
+const signUpDragDropImage = document.getElementById("signUpDragDropImage");
 
 signUpEmail.addEventListener("keypress", (e) => {
   if (e.target.value.trim() != "" && emailRegx.test(e.target.value)) {
@@ -200,8 +201,7 @@ signUpImage.addEventListener("change", () => {
   const ext = getExtension(file.name);
   const validExt = ["jpg", "jpeg", "png"];
   const checkExt = validExt.includes(ext);
-  signUpFileName.innerHTML = "";
-  signUpFileName.innerHTML = file.name;
+
   if (file.name == "") {
     signUpError.innerHTML = "";
     signUpError.innerHTML = `<span>Upload Image</span>`;
@@ -215,6 +215,8 @@ signUpImage.addEventListener("change", () => {
       file.size / 1000 +
       " kb </span>";
   } else {
+    signUpFileName.innerHTML = "";
+    signUpFileName.innerHTML = file.name;
     signUpError.innerHTML = "";
     signupSlideQueue = 5;
   }
@@ -334,6 +336,8 @@ const signUpValidation = (queue) => {
       const ext = getExtension(file.name);
       const validExt = ["jpg", "jpeg", "png"];
       const checkExt = validExt.includes(ext);
+      signUpFileName.innerHTML = "";
+      signUpFileName.innerHTML = file.name;
 
       if (file.name == "") {
         signUpError.innerHTML = "";
@@ -411,6 +415,62 @@ const signUpImageNextSlide = () => {
   signUpSubmitBtn.classList.remove("hidden");
   signUpPrevBtnShow();
 };
+
+// drag drop ui for sign up image
+
+// method for mouse while hovering
+const signUpImageOver = (e) => {
+  signUpDragDropImage.style.border = "5px solid green"
+  e.preventDefault();
+ 
+
+};
+
+//method for mouse drop
+const signUpImageDrop = (e) => {
+  e.preventDefault();
+  
+  signUpImage.files = e.dataTransfer.files;
+  const file = signUpImage.files[0];
+  const ext = getExtension(file.name);
+  const validExt = ["jpg", "jpeg", "png"];
+  const checkExt = validExt.includes(ext);
+
+  if (file.name == "") {
+    signUpError.innerHTML = "";
+    signUpError.innerHTML = `<span>Upload Image</span>`;
+  } else if (!checkExt) {
+    signUpError.innerHTML = "";
+    signUpError.innerHTML = "<span>" + ext + " is not valid extenson</span>";
+  } else if (file.size / 1000 > 600) {
+    signUpError.innerHTML = "";
+    signUpError.innerHTML =
+      "<span>required size < 600 kb <br/>Uploaded file size is " +
+      file.size / 1000 +
+      " kb </span>";
+  } else {
+    signUpFileName.innerHTML = "";
+    signUpFileName.innerHTML = file.name;
+    var reader = new FileReader();
+    reader.onload = function () {
+      console.log(reader.result);
+      signUpDragDropImage.style.backgroundImage =
+        "url('" + reader.result + "')";
+      signUpDragDropImage.style.backgroundSize = "contain";
+      signUpDragDropImage.style.backgroundRepeat = "no-repeat";
+      signUpDragDropImage.style.backgroundPosition = "center";
+    };
+    reader.readAsDataURL(signUpImage.files[0]);
+    signUpError.innerHTML = "";
+  }
+};
+const signUpImageLeave = (e)=>{
+  signUpDragDropImage.style.border = "none";
+  e.preventDefault();
+}
+signUpDragDropImage.addEventListener("dragover", signUpImageOver), false;
+signUpDragDropImage.addEventListener("drop", signUpImageDrop, false);
+signUpDragDropImage.addEventListener("dragleave", signUpImageLeave, false);
 
 const signUpData = () => {
   var signUpData = `
