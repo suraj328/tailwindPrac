@@ -11,3 +11,16 @@
 .text-hover-low-blue{
     @apply hover:text-white;
 }
+.hover-link{
+    @apply hover:bg-gradient-to-r hover:text-white hover:from-[#2c52bc74] hover:to-[#23a4dbe8] ;
+}
+.hover-text-white{
+    @apply hover:text-white;
+}
+.text-white-link{
+    @apply text-white;
+}
+.active{
+    @apply bg-gradient-to-r text-white from-[#2c52bc74] to-[#23a4dbe8]; 
+
+}
